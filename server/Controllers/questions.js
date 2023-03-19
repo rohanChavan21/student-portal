@@ -84,7 +84,7 @@ const createQuestion = async (req, res) => {
 const getQuestions = async (req, res) => {
     try {
         const conn = await oracle.getConnection(credentials)
-        let {id, question, option_a, option_b, option_c, option_d, answer, question_paper_id} = req.body;
+        let {question_paper_id} = req.body;
         let query = `select id, question, option_a, option_b, option_c, option_d from mcq_questions where question_paper_id = ${question_paper_id}`;
         const options = {
             autoCommit:true,

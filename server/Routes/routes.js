@@ -11,6 +11,6 @@ router.route('/getcourses').get(getcourses)
 router.route('/createquestionpaper').post(createQuestionPaper)
 router.route('/getquestionpapers').get(getQuestionPapers)
 router.route('/createquestion').post(createQuestion)
-router.route('/getquestions').get(getQuestions)
+router.route('/getquestions').post(getQuestions)
 
 module.exports = router

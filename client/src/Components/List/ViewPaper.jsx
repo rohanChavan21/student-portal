@@ -1,9 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function ViewPaper() {
 
   const [papers, setPapers] = useState([])
+  const [paperId, setPaperId] = useState(null);
+  const [paperName, setPaperName] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(()=>{
     async function getPapers() {
@@ -26,6 +31,18 @@ function ViewPaper() {
     getPapers();
   }, [])
 
+  function handleSetPaper(id, name){
+    setPaperId(id)
+    setPaperName(name)
+    navigate(`/setexam?id=${id}&name=${name}`)
+  }
+
+  function handleViewPaper(id, name){
+    setPaperId(id)
+    setPaperName(name)
+    navigate(`/viewexam?id=${id}&name=${name}`)
+  }
+
   return (
     <div className='p-2'>
         <div className='grid grid-cols-5 mt-5 mb-10 gap-4 font-semibold text-xl rounded-xl'>
@@ -39,11 +56,11 @@ function ViewPaper() {
         console.log(item)
         return (
         <div className='grid grid-cols-5 my-4 gap-4 border border-amber-400 shadow-sm font-semibold shadow-gray-400 rounded-xl' key={item.ID}>
-          <div className='justify-center text-center flex p-4 my-auto'>{item.COURSE_ID}</div>
+          <div className='justify-center text-center flex p-4 my-auto'>{item.ID}</div>
           <div className='justify-center text-center flex p-4 my-auto'>{item.NAME}</div>
           <div className='justify-center text-center flex p-4 my-auto'>{item.DURATION_MINUTES}</div>
-          <div className='justify-center text-center flex p-4 my-auto'><button className='bg-indigo-600 p-3 rounded-2xl text-white'>Edit Paper</button></div>
-          <div className='justify-center text-center flex p-4 my-auto'><button className='bg-indigo-600 p-3 rounded-2xl text-white'>View Paper</button></div>
+          <div className='justify-center text-center flex p-4 my-auto'><button onClick={()=>handleSetPaper(item.ID, item.NAME)} className='bg-indigo-600 p-3 rounded-2xl text-white'>Set/Edit Paper</button></div>
+          <div className='justify-center text-center flex p-4 my-auto'><button onClick={()=>handleViewPaper(item.ID, item.NAME)} className='bg-indigo-600 p-3 rounded-2xl text-white'>View Paper</button></div>
         </div>
       )})}
     </div>
