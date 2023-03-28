@@ -75,16 +75,60 @@ const createuser = async(req, res) => {
     }
 }
 
-const verifyuser = async(req, res) => {
+// const verifyuser = async(req, res) => {
+//     try {
+//         const conn = await oracle.getConnection(credentials)
+//         let {email, password, role} = req.body
+//         let query = `select * from ${role}_users where email = :email and password = :password`;
+//         // const user = {
+//         //     email: email,
+//         //     password: password,
+//         //     login: true
+//         // }
+//         const binds = {
+//             email: email,
+//             password: password
+//         }
+//         const options = {
+//             fetchInfo: {
+//                 "PASSWORD": {
+//                     type: oracle.STRING
+//                 }
+//             },
+//             autoCommit: true,
+//             outFormat: oracle.OBJECT
+//         }
+//         let response = await conn.execute(query, binds, options)
+//         console.log(response)
+//         await conn.close();
+
+//         if(response.rows.length === 1){
+//             const user = {
+//             id: response.rows[0][0],
+//             name: response.rows[0][1],
+//             email: response.rows[0][2],
+//             role: role
+//         }
+//         const token = jsonwebtoken.sign(user, JWT_SECRET, {expiresIn: '1d'})
+//         res.status(200).json({
+//             token: token,
+//             msg: "User Logged In Successfully"
+//         })
+//         } else {
+//             res.status(401).json({error: "Invalid Credentials"})
+//         }
+
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({msg: "Internal Server Error"})
+//     }
+// }
+
+const verifyuser = async (req, res) => {
     try {
-        const conn = await oracle.getConnection(credentials)
-        let {email, password, role} = req.body
-        let query = `select * from ${role}_users where email = :email and password = :password`;
-        // const user = {
-        //     email: email,
-        //     password: password,
-        //     login: true
-        // }
+        const conn = await oracle.getConnection(credentials);
+        let {email, password} = req.body;
+        let query = `select * from users where email = :email and password = :password`;
         const binds = {
             email: email,
             password: password
@@ -98,28 +142,27 @@ const verifyuser = async(req, res) => {
             autoCommit: true,
             outFormat: oracle.OBJECT
         }
-        let response = await conn.execute(query, binds, options)
+        let response = await conn.execute(query, binds, options);
         console.log(response)
-        await conn.close();
-
+        await conn.close()
         if(response.rows.length === 1){
             const user = {
-            id: response.rows[0][0],
-            name: response.rows[0][1],
-            email: response.rows[0][2],
-            role: role
-        }
-        const token = jsonwebtoken.sign(user, JWT_SECRET, {expiresIn: '1d'})
-        res.status(200).json({
-            token: token,
-            msg: "User Logged In Successfully"
-        })
+                email: response.rows[0].EMAIL,
+                user_role: response.rows[0].USER_ROLE
+            }
+            const token = jsonwebtoken.sign({
+                user: user.email,
+                role: user.user_role
+            }, JWT_SECRET, {expiresIn: '1d'})
+            res.status(200).json({
+                user: user,
+                msg: "User Logged In successfully"
+            })
         } else {
-            res.status(401).json({error: "Invalid Credentials"})
+            res.status(401).json({msg: "Invalid Credentials"})
         }
-
     } catch (error) {
-        console.error(error);
+        console.error(error)
         res.status(500).json({msg: "Internal Server Error"})
     }
 }

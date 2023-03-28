@@ -7,6 +7,7 @@ function StudentTest() {
   const [papers, setPapers] = useState([])
   const [selectedOption, setSelectedOption] = useState(null)
   const [selectedPaperName, setSelectedPaperName] = useState('')
+  const [duration, setDuration] = useState(0);
 
   const navigate = useNavigate();
 
@@ -35,11 +36,12 @@ function StudentTest() {
     const { value, selectedIndex } = event.target;
     setSelectedOption(value);
     setSelectedPaperName(papers[selectedIndex - 1]?.NAME || '');
+    setDuration(papers[selectedIndex-1].DURATION_MINUTES || 0);
   }
 
   function handleExamAttempt(){
     if(selectedOption){
-      navigate(`/exam?id=${selectedOption}&name=${selectedPaperName}`)
+      navigate(`/exam?id=${selectedOption}&name=${selectedPaperName}&duration=${duration}`)
     } else{
       alert('Please Select a paper to attempt')
     }

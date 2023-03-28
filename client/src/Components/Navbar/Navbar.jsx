@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const isPageActive = (pathname) => {
     return location.pathname === pathname
-      ? "text-indigo-600"
+      ? "text-indigo-600 bg-yellow-200"
       : "text-gray-600";
   };
 
